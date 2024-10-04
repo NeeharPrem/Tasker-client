@@ -32,6 +32,21 @@ const Calendar: React.FC = () => {
 
     const adjustedFirstDayOfMonth = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
 
+    function CustomDate() {
+  const customDate = new Date(Date.UTC(2024, 9, 10, 0, 0, 0));
+  
+  const year = customDate.getUTCFullYear();
+  const month = String(customDate.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(customDate.getUTCDate()).padStart(2, '0');
+  const hours = String(customDate.getUTCHours()).padStart(2, '0');
+  const minutes = String(customDate.getUTCMinutes()).padStart(2, '0');
+  const seconds = String(customDate.getUTCSeconds()).padStart(2, '0');
+  const milliseconds = String(customDate.getUTCMilliseconds()).padStart(3, '0');
+  const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}+00:00`;
+  
+  return formattedDate;
+}
+    let dateOut = CustomDate()
     const { data: Data, isLoading, isError, refetch: allTasks } = useQuery({
         queryKey: ['dateDetail', role, userId],
         queryFn: () => getTasks({
@@ -39,7 +54,7 @@ const Calendar: React.FC = () => {
             employeeId: role === 'Employee' ? userId : undefined,
             title: '',
             details: '',
-            date: ''
+            date: dateOut
         }),
     });
 

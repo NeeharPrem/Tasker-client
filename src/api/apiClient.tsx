@@ -18,6 +18,14 @@ interface dataObject{
   taskId:string
 }
 
+interface getParams {
+  managerId?: string;
+  employeeId?: string;
+  date: string;
+  title:string;
+  details:string;
+}
+
 export const login = async (data: Object) => {
   try {
     const response = await Api.post(Endpoints.login, data);
@@ -104,19 +112,23 @@ export const deleteTask = async (taskId: string) => {
   }
 };
 
-export const getTasks = async (date:Data) => {
+export const getTasks = async ({ managerId, employeeId, date }: getParams): Promise<any> => {
   try {
-    const managerId = '66fe5f65081c183e1f163d9f';
-    const date = '2024-10-03T00:00:00.000+00:00';
-    const data = {date: date}
-    const response = await Api.post(`${Endpoints.getTasks}/${managerId}/tasks`,data);
-    return response;
+    const requestData = { date };
+    const idToUse = managerId ? managerId : employeeId;
+    if (!idToUse) {
+      throw new Error('Either managerId or employeeId must be provided');
+    }
+    const response = await Api.post(`${Endpoints.getTasks}/${idToUse}/tasks`, requestData);
+    return response.data;
   } catch (error) {
     if (error && (error as AxiosError).isAxiosError) {
       console.log(error);
     }
+    throw error;
   }
 };
+
 
 export const getTaskDetails = async (taskId:string) => {
   try {
