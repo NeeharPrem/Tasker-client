@@ -54,13 +54,15 @@ const Calendar: React.FC = () => {
             employeeId: role === 'Employee' ? userId : undefined,
             title: '',
             details: '',
-            date: dateOut
+            date: dateOut,
+            role:role
         }),
     });
 
     useEffect(() => {
-        if (Data && Data.data && Data.data.tasks) {
-            setTasks(Data.data.tasks);
+        console.log(Data)
+        if (Data && Data.tasks) {
+            setTasks(Data.tasks);
         }
     }, [Data]);
 

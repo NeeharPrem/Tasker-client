@@ -24,6 +24,7 @@ interface getParams {
   date: string;
   title:string;
   details:string;
+  role: string;
 }
 
 export const login = async (data: Object) => {
@@ -112,9 +113,9 @@ export const deleteTask = async (taskId: string) => {
   }
 };
 
-export const getTasks = async ({ managerId, employeeId, date }: getParams): Promise<any> => {
+export const getTasks = async ({ managerId, employeeId, date,role }: getParams): Promise<any> => {
   try {
-    const requestData = { date };
+    const requestData = { date,role};
     const idToUse = managerId ? managerId : employeeId;
     if (!idToUse) {
       throw new Error('Either managerId or employeeId must be provided');
