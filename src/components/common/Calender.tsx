@@ -33,20 +33,21 @@ const Calendar: React.FC = () => {
     const adjustedFirstDayOfMonth = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
 
     function CustomDate() {
-  const customDate = new Date(Date.UTC(2024, 9, 10, 0, 0, 0));
-  
-  const year = customDate.getUTCFullYear();
-  const month = String(customDate.getUTCMonth() + 1).padStart(2, '0');
-  const day = String(customDate.getUTCDate()).padStart(2, '0');
-  const hours = String(customDate.getUTCHours()).padStart(2, '0');
-  const minutes = String(customDate.getUTCMinutes()).padStart(2, '0');
-  const seconds = String(customDate.getUTCSeconds()).padStart(2, '0');
-  const milliseconds = String(customDate.getUTCMilliseconds()).padStart(3, '0');
-  const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}+00:00`;
-  
-  return formattedDate;
-}
-    let dateOut = CustomDate()
+        const customDate = new Date(Date.UTC(2024, 9, 10, 0, 0, 0));
+        const year = customDate.getUTCFullYear();
+        const month = String(customDate.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(customDate.getUTCDate()).padStart(2, '0');
+        const hours = String(customDate.getUTCHours()).padStart(2, '0');
+        const minutes = String(customDate.getUTCMinutes()).padStart(2, '0');
+        const seconds = String(customDate.getUTCSeconds()).padStart(2, '0');
+        const milliseconds = String(customDate.getUTCMilliseconds()).padStart(3, '0');
+        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}+00:00`;
+
+        return formattedDate;
+    }
+
+    let dateOut = CustomDate();
+    
     const { data: Data, isLoading, isError, refetch: allTasks } = useQuery({
         queryKey: ['dateDetail', role, userId],
         queryFn: () => getTasks({
@@ -55,14 +56,15 @@ const Calendar: React.FC = () => {
             title: '',
             details: '',
             date: dateOut,
-            role:role
+            role: role
         }),
     });
 
     useEffect(() => {
-        console.log(Data)
         if (Data && Data.tasks) {
             setTasks(Data.tasks);
+        } else {
+            setTasks([]); // Ensure tasks is an empty array if no data is returned
         }
     }, [Data]);
 
@@ -113,8 +115,13 @@ const Calendar: React.FC = () => {
         });
     };
 
-    if (isLoading) return <div>Loading...</div>;
-    if (isError) return <div>Error loading tasks</div>;
+    if (isLoading) return <div>Loading tasks...</div>;
+
+    // If there's an error, we log it but still show the calendar
+    if (isError) {
+        console.error('Error loading tasks');
+        // You could optionally display an error message here while still showing the calendar
+    }
 
     return (
         <main className="flex-1 p-4 overflow-auto">
