@@ -32,16 +32,22 @@ const UpdateModal: React.FC<UpdateModalProps> = ({ onClose, taskId,close,reload}
     const { userId } = useSelector((state: RootState) => state.auth);
     const managerId = userId;
 
+    console.log(taskId,'djdj')
+
     const { data: taskData, isLoading: isLoadingTask, isError: isErrorTask } = useQuery({
         queryKey: ['taskDetail', taskId],
         queryFn: () => getTaskDetails(taskId),
     });
-
+    
+    console.log(managerId,'ug')
     const { data: empData, isLoading: isLoadingEmployees, isError: isErrorEmployees } = useQuery({
         queryKey: ['Employees', managerId],
         queryFn: ({ queryKey }) => getEmployees(queryKey[1]),
     });
-    let out= empData.data
+    let out
+    if(empData){
+        out=empData?.data
+    }
 
     const mutation = useMutation({
         mutationFn: () => deleteTask(taskId),

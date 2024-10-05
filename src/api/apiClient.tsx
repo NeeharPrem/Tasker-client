@@ -144,6 +144,7 @@ export const getTaskDetails = async (taskId:string) => {
 
 export const getEmployees = async (managerId: string) => {
   try {
+    console.log(managerId,'fjjf')
     const response = await Api.get(`${Endpoints.getEmployees}/${managerId}`);
     return response.data;
   } catch (error) {
